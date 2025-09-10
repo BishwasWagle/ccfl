@@ -60,15 +60,18 @@ $EXAMPLE_DIR/example_app.exe \
   "${REMAINING_ARGS[@]}"
 
 
-docker run --name ccfl-server --network ccfl-net \
-  -p 8123:8123 -p 8124:8124 \
-  ccfl:latest server  --host=127.0.0.1 \
-  --venv_activate=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate 
+# docker run --name ccfl-server --network ccfl-net \
+#   -p 8123:8123 -p 8124:8124 \
+#   ccfl:latest server  --host=127.0.0.1 \
+#   --venv_activate=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate 
+#   --policy_host=127.0.0.1 --server_app_host=127.0.0.1
 
 
+# docker run --name ccfl-client --network ccfl-net \
+#   ccfl:latest client \
+#   --client_script=client.py \
+#   --venv_activate=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
+#   --client_id=1
+#   --policy_host=127.0.0.1 --server_app_host=127.0.0.1
 
-docker run --name ccfl-client --network ccfl-net \
-  ccfl:latest client \
-  --client_script=client.py \
-  --venv_activate=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
-  --client_id=1
+#   docker run --name ccfl-client --network ccfl-net bwbgv/ccfl client --server_app_host=172.31.20.110 --policy_host=172.31.20.110 --client_id 1  --venv_activate=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate 

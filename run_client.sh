@@ -51,10 +51,10 @@ $EXAMPLE_DIR/example_app.exe \
 #  --client_id 1 \
 #  --venv_activate /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate 
 
- docker run --name ccfl-client --network ccfl-net \
-  ccfl:latest client \
-  --server_app_host=0.0.0.0 \
-  --policy_host=0.0.0.0 \
-  --client_script=client.py \
-  --venv_activate=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
-  --client_id=1
+#  docker run --name ccfl-client --network ccfl-net \
+#   ccfl:latest client \
+#   --server_app_host=0.0.0.0 \
+#   --policy_host=0.0.0.0 \
+#   --client_script=client.py \
+#   --venv_activate=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
+#   --client_id=1

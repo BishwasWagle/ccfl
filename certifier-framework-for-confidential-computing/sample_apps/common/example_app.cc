@@ -73,14 +73,14 @@ DEFINE_string(auth_symmetric_key_alg,
               "authenticated symmetric key algorithm");
 
 // --- FL runner flags ---
-DEFINE_string(fl_workdir, "/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS",
+DEFINE_string(workdir, "/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS",
               "Working directory containing server.py/client.py");
 DEFINE_string(python_bin, "python3", "Python interpreter to use (python3, python, path)");
-DEFINE_string(venv_activate, "/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate", "Path to venv activate script (e.g., /path/to/venv/bin/activate). Optional");
+DEFINE_string(venv_path, "/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate", "Path to venv activate script (e.g., /path/to/venv/bin/activate). Optional");
 DEFINE_string(server_script, "/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/federated/binary/server.py", "Server script filename");
 DEFINE_string(client_script, "/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/federated/binary/client.py", "Client script filename");
 DEFINE_string(dataset_dir, "/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/federated/federated_datasets", "Directory containing dataset files for client script");
-DEFINE_int32(client_id, 1, "Client id to pass as -i <id> to client.py");
+// DEFINE_int32(client_id, 1, "Client id to pass as -i <id> to client.py");
 DEFINE_bool(stream_client_logs, true, "Send client stdout/stderr lines over the secure channel");
 
 
@@ -99,13 +99,13 @@ std::string read_file_contents(const std::string& file_path) {
 // Run a command via bash -lc "<cd && [source venv &&] cmd>".
 // If chan is non-null, each stdout/stderr line is also sent over the secure channel.
 bool run_command_stream(const std::string& workdir,
-                        const std::string& venv_activate,
+                        const std::string& venv_path,
                         const std::string& command_body,
                         secure_authenticated_channel* chan,
                         int* exit_code_out) {
   std::string shell = "bash -lc 'cd " + workdir + " && ";
-  if (!venv_activate.empty()) {
-    shell += "source " + venv_activate + " && ";
+  if (!venv_path.empty()) {
+    shell += "source " + venv_path + " && ";
   }
   shell += command_body + "'";
   FILE* pipe = popen(shell.c_str(), "r");
@@ -316,15 +316,15 @@ bool client_application(secure_authenticated_channel &channel) {
   printf("Server response: %s\n", out.data());
 
   // Build: python client.py -i <id>
-  std::string cmd = FLAGS_python_bin + std::string(" ")
-                  + FLAGS_client_script + " -i "
-                  + std::to_string(FLAGS_client_id) + " -d "
-                  + FLAGS_dataset_dir;
+  std::string cmd = FLAGS_python_bin + std::string(" ") +
+                  " -c " + FLAGS_client_script + 
+                  // " -i " + std::to_string(FLAGS_client_id) + 
+                  " -d " + FLAGS_dataset_dir;
 
-  printf("[client] Executing in %s: %s\n", FLAGS_fl_workdir.c_str(), cmd.c_str());
+  printf("[client] Executing in %s: %s\n", FLAGS_workdir.c_str(), cmd.c_str());
   int exit_code = 0;
-  bool ok = run_command_stream(FLAGS_fl_workdir,
-                               FLAGS_venv_activate,
+  bool ok = run_command_stream(FLAGS_workdir,
+                               FLAGS_venv_path,
                                cmd,
                                &channel,         // stream logs to server
                                &exit_code);
@@ -578,13 +578,13 @@ int main(int an, char **av) {
       // Redirect to a logfile so the process keeps running after we return.
       cmd += " > server.log 2>&1 &";
       int rc = 0;
-      bool ok = run_command_stream(FLAGS_fl_workdir, FLAGS_venv_activate, cmd, /*chan*/nullptr, &rc);
+      bool ok = run_command_stream(FLAGS_workdir, FLAGS_venv_path, cmd, /*chan*/nullptr, &rc);
       // run_command_stream will wait; to truly background, wrap in bash -lc above with '&'
       // We already appended '&', so it returns quickly; rc==0 just means bash accepted it.
       if (!ok) {
         printf("[server] WARNING: attempted to start server.py but got rc=%d. Check server.log\n", rc);
       } else {
-        printf("[server] server.py launched (background). Tail %s/server.log for details.\n", FLAGS_fl_workdir.c_str());
+        printf("[server] server.py launched (background). Tail %s/server.log for details.\n", FLAGS_workdir.c_str());
       }
     }
 
