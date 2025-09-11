@@ -33,10 +33,10 @@ $EXAMPLE_DIR/example_app.exe \
   --operation=run-app-as-client \
   --policy_store_file=policy_store \
   --print_all=true \
-  --fl_workdir /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/ \
+  --workdir /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/ \
   --client_script /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/federated/binary/client.py \
-  --venv_activate /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
-  --client_id 1 \
+  --venv_path /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
+  # --client_id 1 \
   "$@"
 #"$@" will forward all arguments passed to run_client.sh as flags to example_app.exe
 

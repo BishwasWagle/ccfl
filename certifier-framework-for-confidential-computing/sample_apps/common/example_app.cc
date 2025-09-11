@@ -317,9 +317,9 @@ bool client_application(secure_authenticated_channel &channel) {
 
   // Build: python client.py -i <id>
   std::string cmd = FLAGS_python_bin + std::string(" ") +
-                  " -c " + FLAGS_client_script + 
-                  // " -i " + std::to_string(FLAGS_client_id) + 
-                  " -d " + FLAGS_dataset_dir;
+                  + FLAGS_client_script;
+                   + // " -i " + std::to_string(FLAGS_client_id) + 
+                  // " -d " + FLAGS_dataset_dir;
 
   printf("[client] Executing in %s: %s\n", FLAGS_workdir.c_str(), cmd.c_str());
   int exit_code = 0;
