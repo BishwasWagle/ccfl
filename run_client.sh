@@ -33,12 +33,10 @@ $EXAMPLE_DIR/example_app.exe \
   --operation=run-app-as-client \
   --policy_store_file=policy_store \
   --print_all=true \
-  --workdir /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/ \
-  --client_script /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/federated/binary/client.py \
-  --venv_path /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
-  # --client_id 1 \
+  --workdir=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/ \
+  --client_script=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/federated/binary/client.py \
+  --venv_path=/root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/venv/bin/activate \
   "$@"
-#"$@" will forward all arguments passed to run_client.sh as flags to example_app.exe
 
 # docker run -it --name ve3c-server --network certifier-net -p 8123:8123 -p 8124:8124 ve3c-image server --host=0.0.0.0
 # docker run -it --name ve3c-client --network certifier-net ve3c-image client

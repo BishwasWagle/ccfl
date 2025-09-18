@@ -33,7 +33,7 @@ COPY entrypoint.sh /root/entrypoint.sh
 COPY start_certifier_service.sh /root/start_certifier_service.sh
 COPY run_client.sh /root/run_client.sh
 COPY run_server.sh /root/run_server.sh
-
+COPY requirements.txt /root/requirements.txt
 # Make scripts executable
 RUN chmod +x /root/entrypoint.sh
 RUN chmod +x /root/start_certifier_service.sh
@@ -43,7 +43,7 @@ RUN chmod +x /root/run_server.sh
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv "$VIRTUAL_ENV"
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN pip install --upgrade pip && pip install --no-cache-dir -r /root/certifier-framework-for-confidential-computing/sample_apps/simple_app/FL-IDS/requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r /root/requirements.txt
 
 RUN cd /root/certifier-framework-for-confidential-computing && \
     git init && \

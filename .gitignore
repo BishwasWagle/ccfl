@@ -1,2 +1,4 @@
 venv/
 .DS_Store
+data/*
+certifier-framework-for-confidential-computing/sample_apps/simple_app/TrainedFilters/data/
