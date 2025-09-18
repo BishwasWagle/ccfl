@@ -42,30 +42,33 @@ print("Saved data/shared/mnist_test_X.npy and mnist_test_y.npy")
 import pandas as pd
 import numpy as np
 import joblib
+import os
 from pathlib import Path
 
-adv_csv = Path("data/adversarial/mnist_fgsm/mnist_test.csv")
-df = pd.read_csv(adv_csv)
-X_adv = df.drop(columns=["label"]).to_numpy(dtype=np.float32)
-maxv = float(X_adv.max())
-X_adv = X_adv / (25.0 if maxv <= 25.0 else 255.0)
-X_adv = np.clip(X_adv, 0.0, 1.0).astype(np.float32)
-print("Adversarial set:", X_adv.shape, "[min,max] =", float(X_adv.min()), float(X_adv.max()))
+# Paths
+X_path = "data/shared/mnist_test_X.npy"
+y_path = "data/shared/mnist_test_y.npy"  # optional
+
+# Load clean MNIST (flattened, float32 in [0,1])
+X = np.load(X_path)
+if os.path.exists(y_path):
+    y_digits = np.load(y_path)
+
+print("Loaded:", X.shape)
 
 # Load filters
 svm_filter = joblib.load("models/svm_filter_rbf.joblib")
-rf_filter = joblib.load("models/rf_filter.joblib")
+rf_filter  = joblib.load("models/rf_filter.joblib")
 mlp_filter = joblib.load("models/mlp_filter.joblib")
 
 def summarize(name, preds):
     vals, cnts = np.unique(preds, return_counts=True)
     pct = (cnts / cnts.sum() * 100).round(2)
-    print(f"[{name}] adversarial → counts:", {int(v): int(c) for v, c in zip(vals, cnts)},
-          "| %:", {int(v): float(p) for v, p in zip(vals, pct)})
+    print(f"[{name}] clean MNIST → counts:", {int(v): int(c) for v,c in zip(vals, cnts)},
+          "| %:", {int(v): float(p) for v,p in zip(vals, pct)})
 
-# Predict (expect mostly/all 0 = adversarial)
-summarize("SVM", svm_filter.predict(X_adv))
-summarize("RF", rf_filter.predict(X_adv))
-summarize("MLP", mlp_filter.predict(X_adv))
-
+# Predict (1 = clean, 0 = adversarial)
+summarize("SVM", svm_filter.predict(X))
+summarize("RF",  rf_filter.predict(X))
+summarize("MLP", mlp_filter.predict(X))
 # Since the downloaded data is clean data it will give you 100% at the end.
